@@ -1,7 +1,7 @@
 package util
 
 import (
-	dto "github.com/greetinc/greet-auth-srv/dto/auth"
+	dto "github.com/srv-cashpay/auth/dto/auth"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,22 +14,12 @@ func VerifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func EncryptPassword(req *dto.AuthRegisterRequest) (err error) {
-	hashedPassword, err := GenerateFromPassword(req.Password)
+func EncryptPassword(req *dto.SignupRequest) (err error) {
+	hashedPassword, err := GenerateFromPassword(req.Whatsapp)
 
 	if err != nil {
 		return err
 	}
-	req.Password = string(hashedPassword)
-	return nil
-}
-
-func EncryptPasswordAfterReset(req *dto.Reset) (err error) {
-	hashedPassword, err := GenerateFromPassword(req.NewPassword)
-
-	if err != nil {
-		return err
-	}
-	req.NewPassword = string(hashedPassword)
+	req.Whatsapp = string(hashedPassword)
 	return nil
 }

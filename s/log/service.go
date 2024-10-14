@@ -3,7 +3,7 @@ package log
 import (
 	"context"
 
-	"github.com/greetinc/greet-util/s/elasticsearch"
+	"github.com/srv-cashpay/util/s/elasticsearch"
 )
 
 const (

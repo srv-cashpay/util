@@ -17,8 +17,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/greetinc/greet-auth-srv/entity"
-
 	"github.com/google/uuid"
 	"github.com/h2non/filetype"
 	"github.com/labstack/echo/v4"
@@ -524,28 +522,6 @@ func EncryptFileName(originalFileName string) (string, error) {
 
 	encryptedFileName := gcm.Seal(nonce, nonce, []byte(originalFileName), nil)
 	return hex.EncodeToString(encryptedFileName), nil
-}
-
-func Haversine(coord1, coord2 entity.RadiusRange) float64 {
-	const earthRadius = 6371000 // Earth radius in meters
-
-	// Convert degrees to radians
-	lat1 := degToRad(coord1.Latitude)
-	lon1 := degToRad(coord1.Longitude)
-	lat2 := degToRad(coord2.Latitude)
-	lon2 := degToRad(coord2.Longitude)
-
-	// Calculate differences
-	dlat := lat2 - lat1
-	dlon := lon2 - lon1
-
-	// Haversine formula
-	a := math.Pow(math.Sin(dlat/2), 2) + math.Cos(lat1)*math.Cos(lat2)*math.Pow(math.Sin(dlon/2), 2)
-	c := 2 * math.Atan2(math.Sqrt(a), math.Sqrt(1-a))
-
-	// Distance in meters
-	distance := earthRadius * c
-	return distance
 }
 
 // Convert degrees to radians
