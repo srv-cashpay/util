@@ -19,7 +19,7 @@ func VerifyPassword(hashedPassword, password string) error {
 }
 
 func GenerateFromWhatsapp(whatsapp string) ([]byte, error) {
-	return bcrypt.GenerateFromWhatsapp([]byte(whatsapp), bcrypt.DefaultCost)
+	return bcrypt.GenerateFromPassword([]byte(whatsapp), bcrypt.DefaultCost)
 }
 
 func VerifyWhatsapp(hashedPassword, password string) error {
