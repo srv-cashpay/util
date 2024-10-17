@@ -18,8 +18,8 @@ func VerifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func GenerateFromWhatsapp(password string) ([]byte, error) {
-	return bcrypt.GenerateFromWhatsapp([]byte(password), bcrypt.DefaultCost)
+func GenerateFromWhatsapp(whatsapp string) ([]byte, error) {
+	return bcrypt.GenerateFromWhatsapp([]byte(whatsapp), bcrypt.DefaultCost)
 }
 
 func VerifyWhatsapp(hashedPassword, password string) error {
