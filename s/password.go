@@ -19,12 +19,12 @@ func VerifyPassword(hashedPassword, password string) error {
 }
 
 func EncryptPassword(req *dto.SignupRequest) (err error) {
-	hashedPassword, err := GenerateFromPassword(req.Whatsapp)
+	hashedPassword, err := GenerateFromPassword(req.Password)
 
 	if err != nil {
 		return err
 	}
-	req.Whatsapp = string(hashedPassword)
+	req.Password = string(hashedPassword)
 	return nil
 }
 

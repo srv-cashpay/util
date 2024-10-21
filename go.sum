@@ -32,8 +32,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/sirupsen/logrus v1.9.3 h1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=
 github.com/sirupsen/logrus v1.9.3/go.mod h1:naHLuLoDiP4jHNo9R0sCBMtWGeIprob74mVsIT4qYEQ=
-github.com/srv-cashpay/auth v0.0.0-20241014101731-61fc4c7fb655 h1:4pbH2gIfLPchKc9OfltnKBY2X3ybht7CVrvYxbKE654=
-github.com/srv-cashpay/auth v0.0.0-20241014101731-61fc4c7fb655/go.mod h1:sxVJP1djoeROffgFnMwg0QeIKo4gyJwJY/It3YuEZyE=
+github.com/srv-cashpay/auth v0.0.0-20241017065731-8cc45257636f h1:1Dp82rMNXEOR7lAULiLiexBTIRy3kod+HFxSQsr+tIE=
+github.com/srv-cashpay/auth v0.0.0-20241017065731-8cc45257636f/go.mod h1:9ec7he3FH17itnG1AzzDuylftP7+S/A0h3FLfHSPPBg=
 github.com/streadway/amqp v1.1.0 h1:py12iX8XSyI7aN/3dUT8DFIDJazNJsVJdxNVEpnQTZM=
 github.com/streadway/amqp v1.1.0/go.mod h1:WYSrTEYHOXHd0nwFeUXAe2G2hRnQT+deZJJf88uS9Bg=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
