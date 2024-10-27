@@ -24,3 +24,12 @@ func IsNumber(c echo.Context, paramName string) (string, error) {
 
 	return value, nil
 }
+
+func QueryParam(c echo.Context, paramName string) (string, error) {
+	value := c.QueryParam(paramName)
+	if value == "" {
+		return "", fmt.Errorf("%s cannot be empty", paramName)
+	}
+	// Lakukan validasi UUID jika diperlukan (contoh di sini hanya mengembalikan value tanpa validasi UUID)
+	return value, nil
+}
