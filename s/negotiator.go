@@ -376,7 +376,8 @@ func Mailtrap(to, otp string) error {
 	// "Mailtrap: <a href='http://localhost:8080/verify/%s'>Verify Account</a>Your verification code is: <strong>%s</strong>",
 	// verificationToken, otp))
 
-	dialer := gomail.NewDialer("smtp.mailtrap.io", 587, "126a08e0c5ff69", "9f8b22657e0257")
+	dialer := gomail.NewDialer("smtp.mailtrap.io", 587, "06ddde32ae9601", "29785ec701d409")
+
 	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true} // Use this only for development, not secure for production
 
 	if err := dialer.DialAndSend(mailer); err != nil {
