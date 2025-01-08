@@ -48,6 +48,7 @@ type errorConstant struct {
 	UnprocessableEntity Error
 	Unauthorized        Error
 	BadRequest          Error
+	MerchantNoProvide   Error
 	Validation          Error
 	InternalServerError Error
 	Unverified          Error
@@ -149,6 +150,16 @@ var ErrorConstant errorConstant = errorConstant{
 				Message: "Account not verified. Please check your email for verification instructions",
 			},
 			Error: E_VERIFIED,
+		},
+		Code: http.StatusForbidden,
+	},
+	MerchantNoProvide: Error{
+		Response: errorResponse{
+			Meta: ResponseModel{
+				Status:  false,
+				Message: "Data merchant kamu harus dilengkapi dulu",
+			},
+			Error: E_BAD_REQUEST,
 		},
 		Code: http.StatusForbidden,
 	},
