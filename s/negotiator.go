@@ -387,6 +387,29 @@ func Mailtrap(to, otp string) error {
 	return nil
 }
 
+func Zoho(to, otp string) error {
+	mailer := gomail.NewMessage()
+	mailer.SetHeader("From", "cp@cashpay.my.id")
+	mailer.SetHeader("To", to)
+	mailer.SetHeader("Subject", "OTP")
+	//if using otp kode
+	mailer.SetBody("text/html", fmt.Sprintf("Your verification code is: <strong>%s</strong>", otp))
+	//click button at email and verify
+	// mailer.SetBody("text/html", fmt.Sprintf("Hello, this is a test email from "+
+	// "Mailtrap: <a href='http://localhost:8080/verify/%s'>Verify Account</a>Your verification code is: <strong>%s</strong>",
+	// verificationToken, otp))
+
+	dialer := gomail.NewDialer("smtp.zoho.com", 587, "cp@cashpay.my.id", "hVpaDarTYh41")
+
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true} // Use this only for development, not secure for production
+
+	if err := dialer.DialAndSend(mailer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func Negotiate(c echo.Context, code int, i interface{}) error {
 	mediaType := c.QueryParam("mediaType")
 
@@ -463,7 +486,6 @@ func FormatIDR(value float64) string {
 }
 
 func CalculateJumlahBunga(principal float64, rate float64, time int) float64 {
-	// Formula: Bunga = Principal * Rate * Time
 	bunga := principal * rate * float64(time)
 	return bunga
 }
