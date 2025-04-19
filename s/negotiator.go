@@ -389,9 +389,9 @@ func Mailtrap(to, otp string) error {
 
 func Zoho(to, otp string) error {
 	mailer := gomail.NewMessage()
-	mailer.SetHeader("From", "auth@cashpay.my.id")
+	mailer.SetHeader("From", "Cashpay <auth@cashpay.my.id>")
 	mailer.SetHeader("To", to)
-	mailer.SetHeader("Subject", "OTP")
+	mailer.SetHeader("Subject", "Verification Code")
 	//if using otp kode
 	mailer.SetBody("text/html", fmt.Sprintf("Your verification code is: <strong>%s</strong>", otp))
 	//click button at email and verify
