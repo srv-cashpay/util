@@ -399,8 +399,10 @@ func Zoho(to, otp string) error {
 	body := fmt.Sprintf(`
 		<div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
 			<p>Hi there,</p>
-			<p>Your verification code is: <strong>%s</strong></p>
-
+			<p>Your verification code is:</p>
+				<p style="font-size: 28px; font-weight: bold; color: #000; letter-spacing: 2px; margin: 10px 0;">
+								%s
+							</p>
 			<p style="margin-top:20px;">
 				Your account can’t be accessed without this verification code, even if you didn’t submit this request.
 			</p>
