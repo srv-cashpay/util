@@ -36,6 +36,7 @@ const (
 	E_BAD_REQUEST          = "bad_request"
 	E_SERVER_ERROR         = "server_error"
 	E_VERIFIED             = "not_verified"
+	E_EXPIRED              = "account_expired"
 	E_MAXLIMIT             = "max_limit"
 	E_COMPANYEJECT         = "company_eject"
 	E_REGISTERMAIL         = "mail_missing"
@@ -59,6 +60,7 @@ type errorConstant struct {
 	CompanyEject        Error
 	RegisterMail        Error
 	RecordNotFound      Error
+	AccountExpired      Error
 }
 
 var ErrorConstant errorConstant = errorConstant{
@@ -92,6 +94,16 @@ var ErrorConstant errorConstant = errorConstant{
 			Error: E_MAXLIMIT,
 		},
 		Code: http.StatusConflict,
+	},
+	AccountExpired: Error{
+		Response: errorResponse{
+			Meta: ResponseModel{
+				Status:  false,
+				Message: "Account user has been expired, Your payment couldn't be completed",
+			},
+			Error: E_EXPIRED,
+		},
+		Code: http.StatusForbidden,
 	},
 	Duplicate: Error{
 		Response: errorResponse{
