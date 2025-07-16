@@ -37,9 +37,9 @@ func Insert(ctx context.Context, index string, log interface{}) error {
 
 	_, err := Client.Index().
 		Index(index).
-		Type("_doc").
 		BodyJson(log).
 		Do(ctx)
+
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"ElasticSearch": "cannot insert data",
