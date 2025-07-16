@@ -11,9 +11,8 @@ import (
 
 var (
 	ELASTIC_INDEX_NAME = getEnv("ELASTIC_INDEX_NAME", "default_index")
+	Client             *el.Client
 )
-
-var Client *el.Client
 
 // Init initializes the Elasticsearch client
 func Init() {
@@ -21,39 +20,46 @@ func Init() {
 	Client, err = el.NewClient(
 		el.SetURL(os.Getenv("ELASTIC_URL_1")),
 		el.SetSniff(false),
+		// Uncomment if auth is needed:
 		// el.SetBasicAuth(os.Getenv("ELASTIC_USERNAME"), os.Getenv("ELASTIC_PASSWORD")),
 	)
 	if err != nil {
-		panic(fmt.Errorf("failed to connect to elasticsearch: %w", err))
+		logrus.WithError(err).Fatal("Failed to connect to Elasticsearch")
 	}
 	logrus.Info("Elasticsearch successfully connected")
 }
 
-// Insert a new document into an index
+// Insert a new document into the specified index
 func Insert(ctx context.Context, index string, log interface{}) error {
 	if Client == nil {
 		return fmt.Errorf("elasticsearch client is not initialized")
 	}
 
-	_, err := Client.Index().
+	result, err := Client.Index().
 		Index(index).
+		Type("_doc").
 		BodyJson(log).
 		Do(ctx)
-
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"ElasticSearch": "cannot insert data",
+			"ElasticSearch": "Insert Failed",
 			"Index":         index,
+			"Error":         err,
 			"Data":          log,
-			"Error":         err, // Tambah ini
-		}).Error("Failed to insert into Elasticsearch")
+		}).Error("Elasticsearch insert error")
 		return err
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"Index":  result.Index,
+		"ID":     result.Id,
+		"Result": result.Result,
+	}).Info("Document inserted into Elasticsearch")
 
 	return nil
 }
 
-// Update a document by ID in the index
+// Update an existing document by ID
 func Update(ctx context.Context, index, ID string, update map[string]interface{}) error {
 	if Client == nil {
 		return fmt.Errorf("elasticsearch client is not initialized")
@@ -67,45 +73,46 @@ func Update(ctx context.Context, index, ID string, update map[string]interface{}
 		Do(ctx)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"ElasticSearch": "cannot update data",
+			"ElasticSearch": "Update Failed",
 			"ID":            ID,
 			"Index":         index,
 			"Data":          update,
-		}).Error(err.Error())
+		}).Error("Elasticsearch update error")
 		return err
 	}
 
+	logrus.WithField("ID", ID).Info("Document updated in Elasticsearch")
 	return nil
 }
 
-// Search performs a search on a given index
+// Search for documents matching a given query
 func Search(ctx context.Context, index string, searchSource *el.SearchSource) (*el.SearchResult, error) {
 	if Client == nil {
 		return nil, fmt.Errorf("elasticsearch client is not initialized")
 	}
 
-	results, err := Client.Search().
+	result, err := Client.Search().
 		Index(index).
 		SearchSource(searchSource).
 		Do(ctx)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
-			"ElasticSearch": "cannot search data",
+			"ElasticSearch": "Search Failed",
 			"Index":         index,
-		}).Error(err.Error())
+			"Error":         err,
+		}).Error("Elasticsearch search error")
 		return nil, err
 	}
 
-	return results, nil
+	return result, nil
 }
 
-// Get placeholder
+// Get is a placeholder for future implementation
 func Get(ctx context.Context) (interface{}, error) {
-	// Implementasi belum tersedia
 	return nil, nil
 }
 
-// Helper function to get env with fallback
+// Helper function for fallback env values
 func getEnv(key, fallback string) string {
 	if value := os.Getenv(key); value != "" {
 		return value

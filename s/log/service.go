@@ -16,10 +16,10 @@ func InsertErrorLog(ctx context.Context, log *LogError) error {
 	return elasticsearch.Insert(ctx, INDEX_LOG_ERROR, log)
 }
 
-func InsertActivityLog(ctx context.Context, log *LogError) error {
+func InsertActivityLog(ctx context.Context, log *LogActivity) error {
 	return elasticsearch.Insert(ctx, INDEX_LOG_ACTIVITY, log)
 }
 
-func InsertLoginLog(ctx context.Context, log *LogError) error {
+func InsertLoginLog(ctx context.Context, log *LogLogin) error {
 	return elasticsearch.Insert(ctx, INDEX_LOG_LOGIN, log)
 }
