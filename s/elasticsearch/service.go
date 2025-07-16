@@ -45,7 +45,8 @@ func Insert(ctx context.Context, index string, log interface{}) error {
 			"ElasticSearch": "cannot insert data",
 			"Index":         index,
 			"Data":          log,
-		}).Error(err.Error())
+			"Error":         err, // Tambah ini
+		}).Error("Failed to insert into Elasticsearch")
 		return err
 	}
 
