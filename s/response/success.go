@@ -21,6 +21,17 @@ var SuccessConstant successConstant = successConstant{
 	},
 }
 
+var SuccessConstantDeleteAccount successConstant = successConstant{
+	OK: Success{
+		Response: successResponse{
+			Code:    http.StatusOK,
+			Status:  true,
+			Message: "Request successfully proceed",
+			Data:    nil,
+		},
+	},
+}
+
 type successResponse struct {
 	Status  bool        `json:"status"`
 	Code    int         `json:"code"`
@@ -40,6 +51,10 @@ func SuccessBuilder(res *Success, data interface{}) *Success {
 
 func SuccessResponse(data interface{}) *Success {
 	return SuccessBuilder(&SuccessConstant.OK, data)
+}
+
+func SuccessResponseDeleteAccount(data interface{}) *Success {
+	return SuccessBuilder(&SuccessConstantDeleteAccount.OK, data)
 }
 
 func (s *Success) Send(c echo.Context) error {
