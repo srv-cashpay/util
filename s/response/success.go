@@ -26,7 +26,7 @@ var SuccessConstantDeleteAccount successConstant = successConstant{
 		Response: successResponse{
 			Code:    http.StatusOK,
 			Status:  true,
-			Message: "Request successfully proceed",
+			Message: "Request successfully proceed, The account deletion process will take up to 30 days",
 			Data:    nil,
 		},
 	},
