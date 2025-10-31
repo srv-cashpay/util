@@ -16,11 +16,15 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
+
+	"github.com/skip2/go-qrcode"
 
 	"github.com/google/uuid"
 	"github.com/h2non/filetype"
 	"github.com/labstack/echo/v4"
 	"github.com/lib/pq"
+	"golang.org/x/crypto/blake2b"
 	"golang.org/x/text/currency"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -628,4 +632,87 @@ func TruncateFullName(name string, maxLen int) string {
 		return name[:maxLen] + "..."
 	}
 	return name
+}
+
+func GenerateSecureID() (string, error) {
+	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-="
+
+	// Generate a salt
+	salt := make([]byte, 16)
+	_, err := rand.Read(salt)
+	if err != nil {
+		return "", err
+	}
+
+	// Combine salt and current timestamp for uniqueness
+	timestamp := time.Now().UnixNano()
+	saltedID := fmt.Sprintf("%x%d", salt, timestamp)
+
+	// Hash the combination using Blake2
+	hash, err := blake2b.New512(nil)
+	if err != nil {
+		return "", err
+	}
+	hash.Write([]byte(saltedID))
+	hashBytes := hash.Sum(nil)
+
+	// Convert hash bytes into a valid string
+	var secureID []byte
+	for i := 0; i < 12; i++ {
+		secureID = append(secureID, chars[hashBytes[i]%byte(len(chars))])
+	}
+
+	return string(secureID), nil
+}
+
+func FormatWhatsappNumber(phone string) string {
+	// Remove non-digit characters
+	re := regexp.MustCompile(`\D`)
+	phone = re.ReplaceAllString(phone, "")
+
+	// Format the phone number
+	if strings.HasPrefix(phone, "0") {
+		phone = "+62" + phone[1:]
+	} else if strings.HasPrefix(phone, "62") && !strings.HasPrefix(phone, "+") {
+		phone = "+" + phone
+	} else if !strings.HasPrefix(phone, "+") {
+		phone = "+62" + phone
+	}
+
+	return phone
+}
+
+func GenerateProductID() (string, error) {
+
+	securePart, err := GenerateSecurePart()
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s", securePart), nil
+}
+
+func GenerateSecurePart() (string, error) {
+	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz"
+
+	securePart := make([]byte, 12)
+	_, err := rand.Read(securePart)
+	if err != nil {
+		return "", err
+	}
+
+	for i := range securePart {
+		securePart[i] = chars[securePart[i]%byte(len(chars))]
+	}
+
+	return string(securePart), nil
+}
+
+func GenerateQRCode(link string) (string, error) {
+	png, err := qrcode.Encode(link, qrcode.Medium, 256)
+	if err != nil {
+		return "", err
+	}
+	// convert ke base64 biar bisa dikirim di JSON
+	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(png), nil
 }

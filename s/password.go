@@ -6,6 +6,7 @@ import (
 	"time"
 
 	dto "github.com/srv-cashpay/auth/dto/auth"
+	dtom "github.com/srv-cashpay/merchant/dto"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,6 +20,16 @@ func VerifyPassword(hashedPassword, password string) error {
 }
 
 func EncryptPassword(req *dto.SignupRequest) (err error) {
+	hashedPassword, err := GenerateFromPassword(req.Password)
+
+	if err != nil {
+		return err
+	}
+	req.Password = string(hashedPassword)
+	return nil
+}
+
+func EncryptPasswordUserMerchant(req *dtom.UserMerchantRequest) (err error) {
 	hashedPassword, err := GenerateFromPassword(req.Password)
 
 	if err != nil {
