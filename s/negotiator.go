@@ -391,6 +391,51 @@ func Mailtrap(to, otp string) error {
 	return nil
 }
 
+func Mail(to, otp string) error {
+	mailer := gomail.NewMessage()
+
+	// Kirim dengan alias email, pastikan alias ini telah diaktifkan dan diverifikasi di Zoho
+	mailer.SetHeader("From", "Cashpay <mail@cashpay.co.id>")
+	mailer.SetHeader("To", to)
+	mailer.SetHeader("Subject", "Your Verification Code")
+
+	// Isi HTML email dengan styling
+	body := fmt.Sprintf(`
+		<div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
+			<p>Hi there,</p>
+			<p>Your verification code is:</p>
+				<p style="font-size: 28px; font-weight: bold; color: #000; letter-spacing: 2px; margin: 10px 0;">
+								%s
+							</p>
+			<p style="margin-top:20px;">
+				Your account can’t be accessed without this verification code, even if you didn’t submit this request.
+			</p>
+
+			<p>
+				To keep your account secure, we recommend using a unique password for your Cashpay account or using the Cashpay Account Access app to sign in.
+				Two-factor authentication makes signing in easier and safer — without needing to remember or change passwords.
+			</p>
+
+			<p style="margin-top:30px;">Best regards,<br/>Team Cashpay</p>
+		</div>
+	`, otp)
+
+	mailer.SetBody("text/html", body)
+
+	// SMTP menggunakan akun utama, bukan alias
+	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "mail@cashpay.co.id", "0f54e65d098061d987e28552c8fc18dc")
+
+	// Jangan pakai ini di production
+	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Kirim email
+	if err := dialer.DialAndSend(mailer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func Zoho(to, otp string) error {
 	mailer := gomail.NewMessage()
 
