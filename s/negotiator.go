@@ -392,21 +392,23 @@ func Mailtrap(to, otp string) error {
 }
 
 func Mail(to, otp string) error {
-	mailer := gomail.NewMessage()
+	m := gomail.NewMessage()
 
-	// Kirim dengan alias email, pastikan alias ini telah diaktifkan dan diverifikasi di Zoho
-	mailer.SetHeader("From", "Cashpay <mail@cashpay.co.id>")
-	mailer.SetHeader("To", to)
-	mailer.SetHeader("Subject", "Your Verification Code")
+	// From
+	m.SetHeader("From", "Cashpay <mail@cashpay.co.id>")
+	m.SetHeader("To", to)
+	m.SetHeader("Subject", "Your Verification Code")
 
-	// Isi HTML email dengan styling
+	// Body HTML
 	body := fmt.Sprintf(`
 		<div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
 			<p>Hi there,</p>
 			<p>Your verification code is:</p>
-				<p style="font-size: 28px; font-weight: bold; color: #000; letter-spacing: 2px; margin: 10px 0;">
-								%s
-							</p>
+
+			<p style="font-size: 28px; font-weight: bold; color: #000; letter-spacing: 2px; margin: 10px 0;">
+				%s
+			</p>
+
 			<p style="margin-top:20px;">
 				Your account can’t be accessed without this verification code, even if you didn’t submit this request.
 			</p>
@@ -420,17 +422,26 @@ func Mail(to, otp string) error {
 		</div>
 	`, otp)
 
-	mailer.SetBody("text/html", body)
+	m.SetBody("text/html", body)
 
-	// SMTP menggunakan akun utama, bukan alias
-	dialer := gomail.NewDialer("live.smtp.mailtrap.io", 587, "mail@cashpay.co.id", "0f54e65d098061d987e28552c8fc18dc")
+	// ==========================
+	// MAILTRAP SMTP SETTINGS
+	// ==========================
+	host := "live.smtp.mailtrap.io"
+	port := 587
+	username := "api"
+	password := "0f54e65d098061d987e28552c8fc18dc"
 
-	// Jangan pakai ini di production
-	dialer.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	d := gomail.NewDialer(host, port, username, password)
 
-	// Kirim email
-	if err := dialer.DialAndSend(mailer); err != nil {
-		return err
+	// Mailtrap umumnya aman, tapi beberapa server perlu TLS manual
+	d.TLSConfig = &tls.Config{
+		InsecureSkipVerify: false,
+	}
+
+	// Send
+	if err := d.DialAndSend(m); err != nil {
+		return fmt.Errorf("failed to send email: %w", err)
 	}
 
 	return nil
