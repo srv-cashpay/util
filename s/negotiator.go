@@ -13,6 +13,8 @@ import (
 	"io"
 	"math"
 	"mime/multipart"
+	"net"
+	"net/smtp"
 	"os"
 	"regexp"
 	"strings"
@@ -366,6 +368,52 @@ func IsValidEmail(email string) bool {
 	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 	matched, err := regexp.MatchString(emailRegex, email)
 	return err == nil && matched
+}
+
+func IsEmailExists(email string) bool {
+	parts := strings.Split(email, "@")
+	if len(parts) != 2 {
+		return false
+	}
+	domain := parts[1]
+
+	// Lookup MX
+	mxRecords, err := net.LookupMX(domain)
+	if err != nil || len(mxRecords) == 0 {
+		return false
+	}
+
+	// Ambil MX valid
+	var mxHost string
+	for _, mx := range mxRecords {
+		if mx.Host != "." {
+			mxHost = mx.Host + ":25"
+			break
+		}
+	}
+	if mxHost == "" {
+		return false
+	}
+
+	// Tes koneksi SMTP (port 25)
+	conn, err := net.DialTimeout("tcp", mxHost, 10*time.Second)
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+
+	client, err := smtp.NewClient(conn, mxHost)
+	if err != nil {
+		return false
+	}
+	defer client.Quit()
+
+	client.Hello("cashpay.co.id")
+	client.Mail("mail@cashpay.co.id")
+
+	// Cek apakah mailbox ada
+	err = client.Rcpt(email)
+	return err == nil
 }
 
 func Mailtrap(to, otp string) error {

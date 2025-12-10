@@ -40,31 +40,42 @@ const (
 	E_MAXLIMIT             = "max_limit"
 	E_COMPANYEJECT         = "company_eject"
 	E_REGISTERMAIL         = "mail_missing"
+	E_MAILVALIDATION       = "checker_mail"
 )
 
 type errorConstant struct {
-	Duplicate           Error
-	NotFound            Error
-	RouteNotFound       Error
-	UnprocessableEntity Error
-	Unauthorized        Error
-	BadRequest          Error
-	MerchantNoProvide   Error
-	Validation          Error
-	InternalServerError Error
-	Unverified          Error
-	ExpiredToken        Error
-	Suspend             Error
-	VerifyPassword      Error
-	MaxLimit            Error
-	CompanyEject        Error
-	RegisterMail        Error
-	RecordNotFound      Error
-	AccountExpired      Error
+	Duplicate             Error
+	NotFound              Error
+	RouteNotFound         Error
+	UnprocessableEntity   Error
+	Unauthorized          Error
+	BadRequest            Error
+	MerchantNoProvide     Error
+	Validation            Error
+	InternalServerError   Error
+	Unverified            Error
+	ExpiredToken          Error
+	Suspend               Error
+	VerifyPassword        Error
+	MaxLimit              Error
+	CompanyEject          Error
+	RegisterMail          Error
+	RegisterMailNotExists Error
+	RecordNotFound        Error
+	AccountExpired        Error
 }
 
 var ErrorConstant errorConstant = errorConstant{
-
+	RegisterMailNotExists: Error{
+		Response: errorResponse{
+			Meta: ResponseModel{
+				Status:  false,
+				Message: "email does not exist",
+			},
+			Error: E_MAILVALIDATION,
+		},
+		Code: http.StatusBadRequest,
+	},
 	RegisterMail: Error{
 		Response: errorResponse{
 			Meta: ResponseModel{
