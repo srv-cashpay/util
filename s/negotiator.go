@@ -436,7 +436,7 @@ func Mail(to, otp string) error {
 
 	// Mailtrap umumnya aman, tapi beberapa server perlu TLS manual
 	d.TLSConfig = &tls.Config{
-		InsecureSkipVerify: false,
+		ServerName: host,
 	}
 
 	// Send
