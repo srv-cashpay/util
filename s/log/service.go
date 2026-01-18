@@ -3,7 +3,7 @@ package log
 import (
 	"context"
 
-	"github.com/srv-api/util/s/elasticsearch"
+	"github.com/srv-kirim/util/s/elasticsearch"
 )
 
 const (

@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/srv-api/util/s/date"
-	"github.com/srv-api/util/s/log"
+	"github.com/srv-kirim/util/s/date"
+	"github.com/srv-kirim/util/s/log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
