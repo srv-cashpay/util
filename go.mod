@@ -1,4 +1,4 @@
-module github.com/srv-kirim/util
+module github.com/srv-api/util
 
 go 1.24.4
 
